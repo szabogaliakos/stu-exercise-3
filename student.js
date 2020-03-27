@@ -62,8 +62,6 @@ class Student extends Person{
     }
 }
 
-let students = [];
-let numberOfStudents = 0;
 
 function createStudent() {
     let first = document.getElementById("inputFirstName").value;
@@ -94,121 +92,33 @@ function createStudent() {
             });
     }
 
-
     let newStudent = new Student(first, last, gender, date, classes, faculty, major);
     addStudentToDom(newStudent);
     students.push(newStudent);
 }
 
-function buildStudentCard(student){
+function addStudentToDom(student){
     let container = document.getElementById("student-container");
     let studentCard = document.createElement("div");
-    studentCard.innerHTML = "<div class=\"col-sm-12 col-md-6 col-lg-6\">\n" +
-        "                    <div class=\"card m-3\" style=\"width: 18rem;\">\n" +
-        "                        <div class=\"card-body\">\n" +
-        "                            <h5 class=\"card-title pb-4\"></h5>\n" +
-        "                            <div class=\"row\">\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p>Gender:</p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p class=\"font-weight-light gender\"></p>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                            <div class=\"row\">\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p>DOB:</p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p class=\"font-weight-light dob\"></p>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                            <div class=\"row\">\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p>Faculty:</p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p class=\"font-weight-light faculty\"></p>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                            <div class=\"row pb-4\">\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p>Major:</p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-6\">\n" +
-        "                                    <p class=\"font-weight-light major\"></p>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "\n" +
-        "                            <table class=\"table\">\n" +
-        "                                <thead>\n" +
-        "                                <tr>\n" +
-        "                                    <th scope=\"col\">Class name</th>\n" +
-        "                                    <th scope=\"col\">Score</th>\n" +
-        "                                </tr>\n" +
-        "                                </thead>\n" +
-        "                                <tbody>\n" +
-        "                                <tr>\n" +
-        "                                    <td class=\"class-name\"></td>\n" +
-        "                                    <td>" +
-        "                                       <input type=\"number\" class=\"score-input\">" +
-        "                                    </td>\n" +
-        "                                </tr>\n" +
-        "                                <tr>\n" +
-        "                                    <td class=\"class-name\"></td>\n" +
-        "                                    <td>" +
-        "                                       <input type=\"number\" class=\"score-input\">" +
-        "                                    </td>\n" +
-        "                                    </td>\n" +
-        "                                </tr>\n" +
-        "                                <tr>\n" +
-        "                                    <td class=\"class-name\"></td>\n" +
-        "                                    <td>" +
-        "                                       <input type=\"number\" class=\"score-input\">" +
-        "                                    </td>\n" +
-        "                                </tr>\n" +
-        "                                </tbody>\n" +
-        "                            </table>\n" +
-        "                            <div class=\"row\">\n" +
-        "                                <div class=\"col-4\">\n" +
-        "                                    <p>Avg:</p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-4\">\n" +
-        "                                    <p class=\"font-weight-light average\"></p>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"col-4\">\n" +
-        "                                    <p class='classify'></p>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                        </div>\n" +
-        "                        <div class=\"card-footer d-flex justify-content-center\">\n" +
-        "                            <button id=" + numberOfStudents + " type=\"button\" class=\"btn btn-primary\" onclick=\"saveChanges(this)\">Save</button>\n" +
-        "                        </div>\n" +
-        "                    </div>\n" +
-        "                </div>";
+    studentCard.innerHTML = cardTemplate;
+    studentCard.getElementsByClassName("card-title")[0].innerText = student.fullName();
+    studentCard.getElementsByClassName("gender")[0].innerText = student.gender;
+    studentCard.getElementsByClassName("dob")[0].innerText = student.date.toLocaleString('en-GB').split(',')[0];
+    studentCard.getElementsByClassName("faculty")[0].innerText = student.faculty;
+    studentCard.getElementsByClassName("major")[0].innerText = student.major;
+    for (let i = 0; i < student.classes.length; i++) {
+        studentCard.getElementsByClassName("class-name")[i].innerText = student.classes[i].name;
+        studentCard.getElementsByClassName("score-input")[i].value = student.classes[i].score;
+    }
+    studentCard.getElementsByClassName("average")[0].innerText = student.getAverageScore;
+    studentCard.getElementsByClassName("classify")[0].innerText = Student.classify(student.getAverageScore);
 
-        // Set content
-        studentCard.getElementsByClassName("card-title")[0].innerText = student.fullName();
-        studentCard.getElementsByClassName("gender")[0].innerText = student.gender;
-        studentCard.getElementsByClassName("dob")[0].innerText = student.date.toLocaleString('en-GB').split(',')[0];
-        studentCard.getElementsByClassName("faculty")[0].innerText = student.faculty;
-        studentCard.getElementsByClassName("major")[0].innerText = student.major;
-        for (let i = 0; i < student.classes.length; i++) {
-            studentCard.getElementsByClassName("class-name")[i].innerText = student.classes[i].name;
-            studentCard.getElementsByClassName("score-input")[i].value = student.classes[i].score;
-        }
-        studentCard.getElementsByClassName("average")[0].innerText = student.getAverageScore;
-
-        studentCard.id = "student-" + numberOfStudents++;
-        container.appendChild(studentCard);
-}
-
-function addStudentToDom(student) {
-    buildStudentCard(student);
+    studentCard.getElementsByClassName("save-button")[0].id = numberOfStudents;
+    studentCard.id = "student-" + numberOfStudents++;
+    container.appendChild(studentCard);
 }
 
 function saveChanges(button){
-    console.log(button.id);
     let id = button.id;
     let studentCard = document.getElementById("student-" + button.id);
     students[id].setFirstSubjectScore(parseInt(studentCard.getElementsByClassName("score-input")[0].value));
@@ -217,5 +127,116 @@ function saveChanges(button){
     studentCard.getElementsByClassName("average")[0].innerText = students[id].getAverageScore;
     studentCard.getElementsByClassName("classify")[0].innerText = Student.classify(students[id].getAverageScore);
 }
+
+let students = [];
+let numberOfStudents = 0;
+let cardTemplate = "<div class=\"col-sm-12 col-md-6 col-lg-6\">\n" +
+    "                    <div class=\"card m-3\" style=\"width: 18rem;\">\n" +
+    "                        <div class=\"card-body\">\n" +
+    "                            <h5 class=\"card-title pb-4\"></h5>\n" +
+    "                            <div class=\"row\">\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p>Gender:</p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p class=\"font-weight-light gender\"></p>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
+    "                            <div class=\"row\">\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p>DOB:</p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p class=\"font-weight-light dob\"></p>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
+    "                            <div class=\"row\">\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p>Faculty:</p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p class=\"font-weight-light faculty\"></p>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
+    "                            <div class=\"row pb-4\">\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p>Major:</p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-6\">\n" +
+    "                                    <p class=\"font-weight-light major\"></p>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
+    "\n" +
+    "                            <table class=\"table\">\n" +
+    "                                <thead>\n" +
+    "                                <tr>\n" +
+    "                                    <th scope=\"col\">Class name</th>\n" +
+    "                                    <th scope=\"col\">Score</th>\n" +
+    "                                </tr>\n" +
+    "                                </thead>\n" +
+    "                                <tbody>\n" +
+    "                                <tr>\n" +
+    "                                    <td class=\"class-name\"></td>\n" +
+    "                                    <td>" +
+    "                                       <input type=\"number\" class=\"score-input\">" +
+    "                                    </td>\n" +
+    "                                </tr>\n" +
+    "                                <tr>\n" +
+    "                                    <td class=\"class-name\"></td>\n" +
+    "                                    <td>" +
+    "                                       <input type=\"number\" class=\"score-input\">" +
+    "                                    </td>\n" +
+    "                                    </td>\n" +
+    "                                </tr>\n" +
+    "                                <tr>\n" +
+    "                                    <td class=\"class-name\"></td>\n" +
+    "                                    <td>" +
+    "                                       <input type=\"number\" class=\"score-input\">" +
+    "                                    </td>\n" +
+    "                                </tr>\n" +
+    "                                </tbody>\n" +
+    "                            </table>\n" +
+    "                            <div class=\"row\">\n" +
+    "                                <div class=\"col-4\">\n" +
+    "                                    <p>Avg:</p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-4\">\n" +
+    "                                    <p class=\"font-weight-light average\"></p>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"col-4\">\n" +
+    "                                    <p class='classify'></p>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "                        <div class=\"card-footer d-flex justify-content-center\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-primary save-button\" onclick=\"saveChanges(this)\">Save</button>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </div>";
+
+students[numberOfStudents] = new Student(
+    "Lewis",
+    "Hamilton",
+    "Male",
+    new Date(1985,1,7),
+    [
+        {
+            name : "CSS",
+            score : 7
+        },
+        {
+            name : "JS",
+            score : 4
+        },
+        {
+            name : "PHP",
+            score : 9
+        }
+    ],
+    "Formula-1",
+    "Race driver"
+);
+addStudentToDom(students[numberOfStudents]);
+numberOfStudents++;
 
 
