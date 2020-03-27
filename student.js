@@ -3,7 +3,7 @@ class Person{
         this.name = {
             first : firstName,
             last : lastName
-        }
+        };
         this.gender = gender;
         this.date = date;
     }
@@ -11,7 +11,7 @@ class Person{
         return this.name.first + " " + this.name.last;
     }
     personInfo() {
-        return this.name.first + " " + this.name.last + "," + this.gender + "," + this.date.toLocaleString('en-GB');
+        return this.name.first + " " + this.name.last + "," + this.gender + "," + this.date.toLocaleString('en-GB').split(',')[0];
     }
 }
 
@@ -27,7 +27,7 @@ class Student extends Person{
         for (let i = 0; i < this.classes.length; i++) {
             sum += this.classes[i].score;
         }
-        return sum / this.classes.length;
+        return (sum / this.classes.length).toFixed(2);
     }
     setFirstSubjectScore(score1) {
         this.classes[0].score = score1;
@@ -63,6 +63,8 @@ class Student extends Person{
 }
 
 let students = [];
+let numberOfStudents = 0;
+
 function createStudent() {
     let first = document.getElementById("inputFirstName").value;
     let last = document.getElementById("inputLastName").value;
@@ -82,83 +84,138 @@ function createStudent() {
     let faculty = document.getElementById("inputFaculty").value;
     let major = document.getElementById("inputMajor").value;
 
-    let newStudent = new Student(first, last, gender, date, [], faculty, major);
+    let inputClasses = document.getElementsByClassName("inputClass");
+    let classes = [];
+    for (let i = 0; i < inputClasses.length; i++) {
+        classes.push(
+            {
+                name : inputClasses[i].value,
+                score : 0
+            });
+    }
+
+
+    let newStudent = new Student(first, last, gender, date, classes, faculty, major);
     addStudentToDom(newStudent);
     students.push(newStudent);
 }
 
 function buildStudentCard(student){
-    // Create resources
     let container = document.getElementById("student-container");
-    let column = document.createElement("div");
-    let card = document.createElement("div");
-    let cardBody = document.createElement("div");
-    let titleName = document.createElement("h5");
-    let buttonDetails = document.createElement("button");
+    let studentCard = document.createElement("div");
+    studentCard.innerHTML = "<div class=\"col-sm-12 col-md-6 col-lg-6\">\n" +
+        "                    <div class=\"card m-3\" style=\"width: 18rem;\">\n" +
+        "                        <div class=\"card-body\">\n" +
+        "                            <h5 class=\"card-title pb-4\"></h5>\n" +
+        "                            <div class=\"row\">\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p>Gender:</p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p class=\"font-weight-light gender\"></p>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"row\">\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p>DOB:</p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p class=\"font-weight-light dob\"></p>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"row\">\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p>Faculty:</p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p class=\"font-weight-light faculty\"></p>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"row pb-4\">\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p>Major:</p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-6\">\n" +
+        "                                    <p class=\"font-weight-light major\"></p>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "\n" +
+        "                            <table class=\"table\">\n" +
+        "                                <thead>\n" +
+        "                                <tr>\n" +
+        "                                    <th scope=\"col\">Class name</th>\n" +
+        "                                    <th scope=\"col\">Score</th>\n" +
+        "                                </tr>\n" +
+        "                                </thead>\n" +
+        "                                <tbody>\n" +
+        "                                <tr>\n" +
+        "                                    <td class=\"class-name\"></td>\n" +
+        "                                    <td>" +
+        "                                       <input type=\"number\" class=\"score-input\">" +
+        "                                    </td>\n" +
+        "                                </tr>\n" +
+        "                                <tr>\n" +
+        "                                    <td class=\"class-name\"></td>\n" +
+        "                                    <td>" +
+        "                                       <input type=\"number\" class=\"score-input\">" +
+        "                                    </td>\n" +
+        "                                    </td>\n" +
+        "                                </tr>\n" +
+        "                                <tr>\n" +
+        "                                    <td class=\"class-name\"></td>\n" +
+        "                                    <td>" +
+        "                                       <input type=\"number\" class=\"score-input\">" +
+        "                                    </td>\n" +
+        "                                </tr>\n" +
+        "                                </tbody>\n" +
+        "                            </table>\n" +
+        "                            <div class=\"row\">\n" +
+        "                                <div class=\"col-4\">\n" +
+        "                                    <p>Avg:</p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-4\">\n" +
+        "                                    <p class=\"font-weight-light average\"></p>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"col-4\">\n" +
+        "                                    <p class='classify'></p>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                        </div>\n" +
+        "                        <div class=\"card-footer d-flex justify-content-center\">\n" +
+        "                            <button id=" + numberOfStudents + " type=\"button\" class=\"btn btn-primary\" onclick=\"saveChanges(this)\">Save</button>\n" +
+        "                        </div>\n" +
+        "                    </div>\n" +
+        "                </div>";
 
-    // Set style
-    let columnClasses = ["col-sm-12", "col-md-6", "col-lg-6"];
-    for (let i = 0; i < columnClasses.length; i++) {
-        column.classList.add(columnClasses[i]);
-    }
-    card.classList.add("card");
-    card.classList.add("m-3");
-    card.style.width = "18rem";
-    cardBody.classList.add("card-body");
-    titleName.classList.add("card-title");
-    let buttonClasses = ["btn", "btn-primary"];
-    for (let i = 0; i < buttonClasses.length; i++) {
-        buttonDetails.classList.add(buttonClasses[i]);
-    }
+        // Set content
+        studentCard.getElementsByClassName("card-title")[0].innerText = student.fullName();
+        studentCard.getElementsByClassName("gender")[0].innerText = student.gender;
+        studentCard.getElementsByClassName("dob")[0].innerText = student.date.toLocaleString('en-GB').split(',')[0];
+        studentCard.getElementsByClassName("faculty")[0].innerText = student.faculty;
+        studentCard.getElementsByClassName("major")[0].innerText = student.major;
+        for (let i = 0; i < student.classes.length; i++) {
+            studentCard.getElementsByClassName("class-name")[i].innerText = student.classes[i].name;
+            studentCard.getElementsByClassName("score-input")[i].value = student.classes[i].score;
+        }
+        studentCard.getElementsByClassName("average")[0].innerText = student.getAverageScore;
 
-    // Set content
-    titleName.innerText = student.fullName();
-    buttonDetails.innerText = "See more";
-
-    // Build DOM
-    cardBody.appendChild(titleName);
-    cardBody.appendChild(buttonDetails);
-    card.appendChild(cardBody);
-    column.appendChild(card);
-    container.appendChild(column);
-}
-
-function buildStudentModal(student){
-
+        studentCard.id = "student-" + numberOfStudents++;
+        container.appendChild(studentCard);
 }
 
 function addStudentToDom(student) {
     buildStudentCard(student);
-    buildStudentModal(student);
 }
 
-let firstStudent = new Student(
-    "Jack",
-    "Kenway",
-    "Male",
-    new Date(1978,7,26),
-    [
-        {
-            name: "Android",
-            score: 0
-        },
-        {
-            name: "Organizational Behavior",
-            score: 0
-        },
-        {
-            name: "Cross Cultural Management",
-            score: 0
-        }
-    ],
-    "Information Technology",
-    "Computer Science");
-
-firstStudent.setFirstSubjectScore(9);
-firstStudent.setSecondSubjectScore(6);
-firstStudent.setThirdSubjectScore(8);
-
-
-
+function saveChanges(button){
+    console.log(button.id);
+    let id = button.id;
+    let studentCard = document.getElementById("student-" + button.id);
+    students[id].setFirstSubjectScore(parseInt(studentCard.getElementsByClassName("score-input")[0].value));
+    students[id].setSecondSubjectScore(parseInt(studentCard.getElementsByClassName("score-input")[1].value));
+    students[id].setThirdSubjectScore(parseInt(studentCard.getElementsByClassName("score-input")[2].value));
+    studentCard.getElementsByClassName("average")[0].innerText = students[id].getAverageScore;
+    studentCard.getElementsByClassName("classify")[0].innerText = Student.classify(students[id].getAverageScore);
+}
 
 

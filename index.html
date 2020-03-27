@@ -62,9 +62,19 @@
                                             <div class="form-group">
                                                 <h4>Student details</h4>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputLastName">Class</label>
-                                                <input type="text" class="form-control" id="inputClass" placeholder="Enter class">
+                                            <div class="p-2">
+                                                <label for="inputLastName">Classes</label>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <input type="text" class="form-control inputClass" placeholder="Enter class name">
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <input type="text" class="form-control inputClass" placeholder="Enter class name">
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <input type="text" class="form-control inputClass" placeholder="Enter class name">
+                                                    </li>
+                                                </ul>
                                             </div>
                                             <div class="form-group">
                                                 <label for="inputLastName">Faculty</label>
@@ -75,9 +85,9 @@
                                                 <input type="text" class="form-control" id="inputMajor" placeholder="Enter major">
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-lg-12">
-                                            <button onclick="createStudent()" class="btn btn-primary">Create</button>
-                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <button onclick="createStudent()" class="btn btn-primary">Create</button>
                                     </div>
                                 </div>
                             </div>
@@ -91,19 +101,8 @@
     <section id="data">
         <div class="container">
             <div class="row" id="student-container">
-                <div class="col-sm-12 col-md-6 col-lg-6">
-                    <div class="card m-3" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">Jack Kenway</h5>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                See more
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-
     </section>
 
     <script src="student.js"></script>
