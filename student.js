@@ -237,6 +237,5 @@ students[numberOfStudents] = new Student(
     "Race driver"
 );
 addStudentToDom(students[numberOfStudents]);
-numberOfStudents++;
 
 
